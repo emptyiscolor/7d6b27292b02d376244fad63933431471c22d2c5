@@ -56,8 +56,8 @@ request = portal.context.makeRequestRSpec()
 
 # Add a raw PC to the request.
 node = request.RawPC("node")
-# node.hardware_type = "m510"
-node.hardware_type = "d750"
+node.hardware_type = "m510"
+# node.hardware_type = "d750"
 # node.hardware_type = "ibm8335"
 # node.hardware_type = "c240g5"
 iface = node.addInterface()
