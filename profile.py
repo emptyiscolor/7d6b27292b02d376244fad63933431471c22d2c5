@@ -26,9 +26,9 @@ pc.defineParameter("osImage", "Select OS image",
                    portal.ParameterType.IMAGE,
                    imageList[0], imageList,
                    longDescription="")
-                   
+
 # urn:publicid:IDN+utah.cloudlab.us:super-fuzzing-pg0+ltdataset+DataStorage
-pc.defineParameter("DATASET", "URN of your dataset", 
+pc.defineParameter("DATASET", "URN of your dataset",
                    portal.ParameterType.STRING,
                    "urn:publicid:IDN+utah.cloudlab.us:super-fuzzing-pg0+ltdataset+DataStorage")
 
@@ -48,7 +48,7 @@ MNT_2 = "sudo mount /dev/nvme0n1p4 /mnt/extra"
 UNTAR = "sudo -u {} nohup python3 /local/repository/sine.py > /dev/null &"
 UNTAR = UNTAR.format(USER)
 PKG_UPDATE = "sudo apt update"
-INSTALL_PKG = "sudo apt install byobu build-essential vim -y"
+INSTALL_PKG = "sudo apt install byobu build-essential vim dmg2img tesseract-ocr tesseract-ocr-eng -y"
 
 # Create a Request object to start building the RSpec.
 request = portal.context.makeRequestRSpec()
@@ -74,12 +74,12 @@ fslink.best_effort = True
 fslink.vlan_tagging = True
 
 
-# Install 
+# Install
 node.addService(rspec.Execute(shell="bash", command=PKG_UPDATE))
 node.addService(rspec.Execute(shell="bash", command=INSTALL_PKG))
 node.addService(rspec.Execute(shell="bash", command=MNT))
-# node.addService(rspec.Execute(shell="bash", command=MNT_1))
-# node.addService(rspec.Execute(shell="bash", command=MNT_2))
+node.addService(rspec.Execute(shell="bash", command=MNT_1))
+node.addService(rspec.Execute(shell="bash", command=MNT_2))
 node.addService(rspec.Execute(shell="bash", command=CHMOD))
 node.addService(rspec.Execute(shell="bash", command=OQINSTALL))
 node.addService(rspec.Execute(shell="bash", command=UNTAR))
