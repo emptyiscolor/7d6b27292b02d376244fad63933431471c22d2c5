@@ -12,4 +12,7 @@ curl https://raw.githubusercontent.com/wklken/vim-for-server/master/vimrc > /roo
 # sudo apt install xfce4 xfce4-goodies
 # sudo apt install tightvncserver
 # https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-vnc-on-ubuntu-20-04
+# Docker config: (storage)
+# ExecStart=/usr/bin/dockerd -g /mydata/data/docker/ -H fd:// --containerd=/run/containerd/containerd.sock
 
+# https://github.com/retspen/webvirtcloud
