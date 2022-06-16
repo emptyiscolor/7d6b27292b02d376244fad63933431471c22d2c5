@@ -17,9 +17,7 @@ pc = portal.Context()
 # URL = "https://gitlab.flux.utah.edu/stoller/dots/-/raw/master/dots.tar.gz"
 
 
-imageList = [('urn:publicid:IDN+emulab.net+image+Super-Fuzzing:vm-with-mac', 'UBUNTU 18.04 with packages'),
-#     ('urn:publicid:IDN+clemson.cloudlab.us+image+emulab-ops:UBUNTU20-PPC-OSCP-U', '20.04 PPC'),
-    ('urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU18-64-STD', 'UBUNTU 18.04'),
+imageList = [('urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU18-64-STD', 'UBUNTU 18.04'),
     ('urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU20-64-STD', 'UBUNTU 20.04')]
 
 pc.defineParameter("osImage", "Select OS image",
@@ -40,15 +38,15 @@ params = pc.bindParameters()
 USER = os.environ["USER"]
 
 CHMOD = "chmod 700 /local/repository/*.sh"
-OQINSTALL = "sudo bash /local/repository/os-ins.sh"
-MNT = "sudo mkdir -p /mnt/extra"
-MNT_1 = "sudo mkfs.ext4 /dev/nvme0n1p4"
-MNT_2 = "sudo mount /dev/nvme0n1p4 /mnt/extra"
+OQINSTALL = "sudo bash /local/repository/bootstrap.sh"
+MNT = "sudo mkdir -p /mnt/sdb"
+MNT_1 = "sudo mkfs.ext4 /dev/sdb"
+MNT_2 = "sudo mount /dev/sdb /mnt/sdb"
 
 UNTAR = "sudo -u {} nohup python3 /local/repository/sine.py > /dev/null &"
 UNTAR = UNTAR.format(USER)
 PKG_UPDATE = "sudo apt update"
-INSTALL_PKG = "sudo apt install byobu build-essential vim dmg2img tesseract-ocr tesseract-ocr-eng -y"
+INSTALL_PKG = "sudo apt install byobu build-essential vim dmg2img xfce4 xfce4-goodies tightvncserver tesseract-ocr tesseract-ocr-eng -y"
 
 # Create a Request object to start building the RSpec.
 request = portal.context.makeRequestRSpec()
@@ -56,22 +54,22 @@ request = portal.context.makeRequestRSpec()
 
 # Add a raw PC to the request.
 node = request.RawPC("node")
-node.hardware_type = "m510"
+node.hardware_type = "d430"
 # node.hardware_type = "d750"
 # node.hardware_type = "ibm8335"
 # node.hardware_type = "c240g5"
 iface = node.addInterface()
 node.disk_image = params.osImage
-fsnode = request.RemoteBlockstore("bs", params.MPOINT)
-fsnode.dataset = params.DATASET
+# fsnode = request.RemoteBlockstore("bs", params.MPOINT)
+# fsnode.dataset = params.DATASET
 
-fslink = request.Link("fslink")
-fslink.addInterface(iface)
-fslink.addInterface(fsnode.interface)
+# fslink = request.Link("fslink")
+# fslink.addInterface(iface)
+# fslink.addInterface(fsnode.interface)
 
 # Special attributes for this link that we must use.
-fslink.best_effort = True
-fslink.vlan_tagging = True
+# fslink.best_effort = True
+# fslink.vlan_tagging = True
 
 
 # Install
