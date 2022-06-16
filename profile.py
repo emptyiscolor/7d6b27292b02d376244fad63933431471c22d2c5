@@ -37,7 +37,7 @@ node_client_1.hardware_type = 'c6525-25g'
 node_client_1.disk_image = 'urn:publicid:IDN+utah.cloudlab.us+image+emulab-ops//UBUNTU20-64-STD'
 iface1 = node_client_1.addInterface('interface-1')
 bs1 = node_client_1.Blockstore('bs1', '/mydata')
-node_client1.addService(pg.Execute(shell="bash", command=OQINSTALL))
+node_client_1.addService(pg.Execute(shell="bash", command=OQINSTALL))
 
 # Node client 2
 node_client_2 = request.RawPC('client2')
