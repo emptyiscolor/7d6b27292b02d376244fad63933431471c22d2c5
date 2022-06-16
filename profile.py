@@ -17,6 +17,15 @@ import geni.rspec.emulab as emulab
 
 # Create a portal object,
 pc = portal.Context()
+# urn:publicid:IDN+utah.cloudlab.us:super-fuzzing-pg0+ltdataset+DataStorage
+pc.defineParameter("DATASET", "URN of your dataset",
+                   portal.ParameterType.STRING,
+                   "urn:publicid:IDN+utah.cloudlab.us:super-fuzzing-pg0+ltdataset+DataStorage")
+
+pc.defineParameter("MPOINT", "Mountpoint for file system",
+                   portal.ParameterType.STRING, "/data")
+
+params = pc.bindParameters()
 
 # Create a Request object to start building the RSpec.
 request = pc.makeRequestRSpec()
