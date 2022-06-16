@@ -3,7 +3,7 @@
 # Ask for the user password
 
 # Install kernel extra's to enable docker aufs support
-# sudo apt-get -y install linux-image-extra-$(uname -r)
+sudo apt-get -y install linux-image-extra-$(uname -r)
 
 # Add Docker PPA and install latest version
 # sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9

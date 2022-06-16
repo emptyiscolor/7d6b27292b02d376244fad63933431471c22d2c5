@@ -1,86 +1,58 @@
-"""Install frps.
-"""
-import os
+"""two c6525-25g client nodes and one server running ubuntu 20.04
+
+Instructions:
+su sudo for root access"""
+
+#
+# NOTE: This code was machine converted. An actual human would not
+#       write code like this!
+#
+
 # Import the Portal object.
 import geni.portal as portal
-# Emulab specific extensions.
-import geni.rspec.emulab as emulab
 # Import the ProtoGENI library.
-import geni.rspec.pg as rspec
+import geni.rspec.pg as pg
+# Import the Emulab specific extensions.
+import geni.rspec.emulab as emulab
 
-
-# Create a portal context, needed to defined parameters
+# Create a portal object,
 pc = portal.Context()
-#
-# This is a git repo with my dot files and junk I like.
-#
-# URL = "https://gitlab.flux.utah.edu/stoller/dots/-/raw/master/dots.tar.gz"
-
-
-imageList = [('urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU18-64-STD', 'UBUNTU 18.04'),
-    ('urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU20-64-STD', 'UBUNTU 20.04')]
-
-pc.defineParameter("osImage", "Select OS image",
-                   portal.ParameterType.IMAGE,
-                   imageList[0], imageList,
-                   longDescription="")
-
-# urn:publicid:IDN+utah.cloudlab.us:super-fuzzing-pg0+ltdataset+DataStorage
-pc.defineParameter("DATASET", "URN of your dataset",
-                   portal.ParameterType.STRING,
-                   "urn:publicid:IDN+utah.cloudlab.us:super-fuzzing-pg0+ltdataset+DataStorage")
-
-pc.defineParameter("MPOINT", "Mountpoint for file system",
-                   portal.ParameterType.STRING, "/mydata")
-
-params = pc.bindParameters()
-
-USER = os.environ["USER"]
-
-CHMOD = "chmod 700 /local/repository/*.sh"
-OQINSTALL = "sudo bash /local/repository/bootstrap.sh"
-MNT = "sudo mkdir -p /mnt/sdb"
-MNT_1 = "sudo mkfs.ext4 /dev/sdb"
-MNT_2 = "sudo mount /dev/sdb /mnt/sdb"
-
-UNTAR = "sudo -u {} nohup python3 /local/repository/sine.py > /dev/null &"
-UNTAR = UNTAR.format(USER)
-PKG_UPDATE = "sudo apt update"
-INSTALL_PKG = "sudo apt install byobu build-essential vim dmg2img xfce4 xfce4-goodies tightvncserver tesseract-ocr tesseract-ocr-eng -y"
 
 # Create a Request object to start building the RSpec.
-request = portal.context.makeRequestRSpec()
+request = pc.makeRequestRSpec()
 
+OQINSTALL = "sudo bash /local/repository/install-docker.sh"
 
-# Add a raw PC to the request.
-node = request.RawPC("node")
-node.hardware_type = "d430"
-# node.hardware_type = "d750"
-# node.hardware_type = "ibm8335"
-# node.hardware_type = "c240g5"
-iface = node.addInterface()
-node.disk_image = params.osImage
-# fsnode = request.RemoteBlockstore("bs", params.MPOINT)
-# fsnode.dataset = params.DATASET
+# Node server
+node_server = request.RawPC('server')
+node_server.hardware_type = 'c6525-25g'
+node_server.disk_image = 'urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD'
+iface0 = node_server.addInterface('interface-0')
+bs0 = node_server.Blockstore('bs', '/mydata')
+node_server.addService(rspec.Execute(shell="bash", command=OQINSTALL))
 
-# fslink = request.Link("fslink")
-# fslink.addInterface(iface)
-# fslink.addInterface(fsnode.interface)
+# Node client 1
+node_client_1 = request.RawPC('client1')
+node_client_1.hardware_type = 'c6525-25g'
+node_client_1.disk_image = 'urn:publicid:IDN+utah.cloudlab.us+image+emulab-ops//UBUNTU20-64-STD'
+iface1 = node_client_1.addInterface('interface-1')
+bs1 = node_client_1.Blockstore('bs1', '/mydata')
+node_client1.addService(rspec.Execute(shell="bash", command=OQINSTALL))
 
-# Special attributes for this link that we must use.
-# fslink.best_effort = True
-# fslink.vlan_tagging = True
+# Node client 2
+node_client_2 = request.RawPC('client2')
+node_client_2.hardware_type = 'c6525-25g'
+node_client_2.disk_image = 'urn:publicid:IDN+utah.cloudlab.us+image+emulab-ops//UBUNTU20-64-STD'
+iface2 = node_client_2.addInterface('interface-2')
+bs2 = node_client_2.Blockstore('bs2', '/mydata')
+node_client_2.addService(rspec.Execute(shell="bash", command=OQINSTALL))
 
+# Link link-0
+link_0 = request.Link('link-0')
+link_0.Site('undefined')
+link_0.addInterface(iface0)
+link_0.addInterface(iface1)
+link_0.addInterface(iface2)
 
-# Install
-node.addService(rspec.Execute(shell="bash", command=PKG_UPDATE))
-node.addService(rspec.Execute(shell="bash", command=INSTALL_PKG))
-node.addService(rspec.Execute(shell="bash", command=MNT))
-node.addService(rspec.Execute(shell="bash", command=MNT_1))
-node.addService(rspec.Execute(shell="bash", command=MNT_2))
-node.addService(rspec.Execute(shell="bash", command=CHMOD))
-node.addService(rspec.Execute(shell="bash", command=OQINSTALL))
-node.addService(rspec.Execute(shell="bash", command=UNTAR))
-
-
-portal.context.printRequestRSpec()
+# Print the generated rspec
+pc.printRequestRSpec(request)
