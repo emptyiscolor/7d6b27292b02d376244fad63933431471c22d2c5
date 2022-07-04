@@ -20,9 +20,15 @@ sudo sh -c "curl -L https://github.com/docker/compose/releases/download/${COMPOS
 sudo chmod +x /usr/local/bin/docker-compose
 sudo sh -c "curl -L https://raw.githubusercontent.com/docker/compose/${COMPOSE_VERSION}/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose"
 
+# move to larger space
+sudo mkdir -p /mydata/docker && sudo ln -s /mydata/docker /var/lib/ 
+sudo systemctl stop docker && sudo systemctl start docker
+
 # Install docker-cleanup command
 cd /tmp
 git clone https://gist.github.com/76b450a0c986e576e98b.git
 cd 76b450a0c986e576e98b
 sudo mv docker-cleanup /usr/local/bin/docker-cleanup
 sudo chmod +x /usr/local/bin/docker-cleanup
+
+
