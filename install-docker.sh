@@ -31,4 +31,4 @@ cd 76b450a0c986e576e98b
 sudo mv docker-cleanup /usr/local/bin/docker-cleanup
 sudo chmod +x /usr/local/bin/docker-cleanup
 
-
+sudo apt install python3-pip python3.8-dev python3.8-venv build-essential byobu
