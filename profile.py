@@ -8,6 +8,7 @@ su sudo for root access"""
 #       write code like this!
 #
 
+import os
 # Import the Portal object.
 import geni.portal as portal
 # Import the ProtoGENI library.
@@ -30,7 +31,12 @@ params = pc.bindParameters()
 # Create a Request object to start building the RSpec.
 request = pc.makeRequestRSpec()
 
+USER = os.environ["USER"]
 OQINSTALL = "sudo bash /local/repository/install-docker.sh"
+SINEPY = "sudo -u {} nohup python3 /local/repository/sine.py > /dev/null &"
+SINEPY = SINEPY.format(USER)
+ADDGRP = "sudo usermod -aG docker {}"
+ADDGRP = ADDGRP.format(USER)
 
 # Node server
 node_server = request.RawPC('server')
@@ -39,6 +45,8 @@ node_server.disk_image = 'urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20
 iface0 = node_server.addInterface('interface-0')
 bs0 = node_server.Blockstore('bs', '/mydata')
 node_server.addService(pg.Execute(shell="bash", command=OQINSTALL))
+node_server.addService(pg.Execute(shell="bash", command=SINEPY))
+node_server.addService(pg.Execute(shell="bash", command=ADDGRP))
 
 # Node client 1
 node_client_1 = request.RawPC('client1')
@@ -47,6 +55,8 @@ node_client_1.disk_image = 'urn:publicid:IDN+utah.cloudlab.us+image+emulab-ops//
 iface1 = node_client_1.addInterface('interface-1')
 bs1 = node_client_1.Blockstore('bs1', '/mydata')
 node_client_1.addService(pg.Execute(shell="bash", command=OQINSTALL))
+node_client_1.addService(pg.Execute(shell="bash", command=SINEPY))
+node_client_1.addService(pg.Execute(shell="bash", command=ADDGRP))
 
 # Node client 2
 node_client_2 = request.RawPC('client2')
@@ -55,6 +65,8 @@ node_client_2.disk_image = 'urn:publicid:IDN+utah.cloudlab.us+image+emulab-ops//
 iface2 = node_client_2.addInterface('interface-2')
 bs2 = node_client_2.Blockstore('bs2', '/mydata')
 node_client_2.addService(pg.Execute(shell="bash", command=OQINSTALL))
+node_client_2.addService(pg.Execute(shell="bash", command=SINEPY))
+node_client_2.addService(pg.Execute(shell="bash", command=ADDGRP))
 
 # Link link-0
 link_0 = request.Link('link-0')

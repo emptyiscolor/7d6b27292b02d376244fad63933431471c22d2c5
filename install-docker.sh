@@ -21,8 +21,11 @@ sudo chmod +x /usr/local/bin/docker-compose
 sudo sh -c "curl -L https://raw.githubusercontent.com/docker/compose/${COMPOSE_VERSION}/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose"
 
 # move to larger space
-sudo mkdir -p /mydata/docker && sudo ln -s /mydata/docker /var/lib/ 
-sudo systemctl stop docker && sudo systemctl start docker
+sudo systemctl stop docker &&\
+    sudo mkdir -p /mydata/docker &&\
+    sudo rm -rf /var/lib/docker &&\
+    sudo ln -s /mydata/docker /var/lib/ &&\
+    sudo systemctl start docker
 
 # Install docker-cleanup command
 cd /tmp
@@ -31,4 +34,5 @@ cd 76b450a0c986e576e98b
 sudo mv docker-cleanup /usr/local/bin/docker-cleanup
 sudo chmod +x /usr/local/bin/docker-cleanup
 
-sudo apt install python3-pip python3.8-dev python3.8-venv build-essential byobu
+sudo apt install -y python3-pip python3.8-dev python3.8-venv build-essential byobu
+
