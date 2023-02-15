@@ -40,8 +40,8 @@ ADDGRP = ADDGRP.format(USER)
 
 # Node server
 node_server = request.RawPC('server')
-# node_server.hardware_type = 'c6525-25g'
-node_server.hardware_type = 'd6515'
+node_server.hardware_type = 'c6525-25g'
+# node_server.hardware_type = 'd6515'
 node_server.disk_image = 'urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD'
 iface0 = node_server.addInterface('interface-0')
 bs0 = node_server.Blockstore('bs', '/mydata')
