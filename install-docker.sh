@@ -16,8 +16,8 @@ wget -qO- https://get.docker.com/ | sh
 
 # Install docker-compose
 COMPOSE_VERSION=`git ls-remote https://github.com/docker/compose | grep refs/tags | grep -oE "[0-9]+\.[0-9][0-9]+\.[0-9]+$" | sort --version-sort | tail -n 1`
-sudo sh -c "curl -L https://github.com/docker/compose/releases/download/v2.13.0/docker-compose-linux-x86_64 > /usr/local/bin/docker-compose > /usr/local/bin/docker-compose"
-sudo chmod +x /usr/local/bin/docker-compose
+# sudo sh -c "curl -L https://github.com/docker/compose/releases/download/v2.13.0/docker-compose-linux-x86_64 > /usr/local/bin/docker-compose > /usr/local/bin/docker-compose"
+#sudo chmod +x /usr/local/bin/docker-compose
 
 # move to larger space
 sudo systemctl stop docker &&\
@@ -33,5 +33,5 @@ cd 76b450a0c986e576e98b
 sudo mv docker-cleanup /usr/local/bin/docker-cleanup
 sudo chmod +x /usr/local/bin/docker-cleanup
 
-sudo apt install -y python3-pip python3.8-dev python3.8-venv build-essential byobu
+sudo apt install -y python3-pip python3.8-dev python3.8-venv build-essential byobu stress-ng htop
 
