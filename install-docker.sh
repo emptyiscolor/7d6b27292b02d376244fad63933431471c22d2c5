@@ -26,6 +26,8 @@ sudo systemctl stop docker &&\
     sudo ln -s /mydata/docker /var/lib/ &&\
     sudo systemctl start docker
 
+sudo mkdir -p /mydata/data
+
 # Install docker-cleanup command
 cd /tmp
 git clone https://gist.github.com/76b450a0c986e576e98b.git
@@ -34,4 +36,6 @@ sudo mv docker-cleanup /usr/local/bin/docker-cleanup
 sudo chmod +x /usr/local/bin/docker-cleanup
 
 sudo apt install -y python3-pip python3.8-dev python3.8-venv build-essential byobu stress-ng htop
+
+sudo chown -R $USER /mydata/data
 
