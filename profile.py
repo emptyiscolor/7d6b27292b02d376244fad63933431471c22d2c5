@@ -44,11 +44,14 @@ OQINSTALL = "sudo bash /local/repository/os-ins.sh"
 MNT = "sudo mkdir -p /mnt/extra"
 MNT_1 = "sudo mkfs.ext4 /dev/nvme0n1p4"
 MNT_2 = "sudo mount /dev/nvme0n1p4 /mnt/extra"
+DOCKERINSTALL = "sudo bash /local/repository/install-docker.sh"
 
 UNTAR = "sudo -u {} nohup python3 /local/repository/sine.py > /dev/null &"
 UNTAR = UNTAR.format(USER)
 PKG_UPDATE = "sudo apt update"
 INSTALL_PKG = "sudo apt install byobu build-essential vim dmg2img tesseract-ocr tesseract-ocr-eng -y"
+ADDGRP = "sudo usermod -aG docker {}"
+ADDGRP = ADDGRP.format(USER)
 
 # Create a Request object to start building the RSpec.
 request = portal.context.makeRequestRSpec()
@@ -65,6 +68,8 @@ iface = node.addInterface()
 node.disk_image = params.osImage
 fsnode = request.RemoteBlockstore("bs", params.MPOINT)
 fsnode.dataset = params.DATASET
+
+# bs0 = node.Blockstore('bs', '/mnt/extra/data')
 
 fslink = request.Link("fslink")
 fslink.addInterface(iface)
@@ -84,6 +89,8 @@ node.addService(rspec.Execute(shell="bash", command=MNT_2))
 node.addService(rspec.Execute(shell="bash", command=CHMOD))
 node.addService(rspec.Execute(shell="bash", command=OQINSTALL))
 node.addService(rspec.Execute(shell="bash", command=UNTAR))
-
+node.addService(rspec.Execute(shell="bash", command=DOCKERINSTALL))
+node.addService(rspec.Execute(shell="bash", command=ADDGRP))
 
 portal.context.printRequestRSpec()
+
