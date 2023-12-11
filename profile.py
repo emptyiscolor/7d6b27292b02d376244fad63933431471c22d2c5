@@ -63,6 +63,7 @@ node_client_1.addService(pg.Execute(shell="bash", command=ADDGRP))
 # Node client 2
 node_client_2 = request.RawPC('client2')
 node_client_2.hardware_type = 'c6525-25g'
+node_client_2.hardware_type = 'c6420'
 #node_client_2.hardware_type = 'd6515'
 node_client_2.disk_image = 'urn:publicid:IDN+utah.cloudlab.us+image+emulab-ops//UBUNTU20-64-STD'
 iface2 = node_client_2.addInterface('interface-2')
