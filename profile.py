@@ -49,7 +49,7 @@ DOCKERINSTALL = "sudo bash /local/repository/install-docker.sh"
 UNTAR = "sudo -u {} nohup python3 /local/repository/sine.py > /dev/null &"
 UNTAR = UNTAR.format(USER)
 PKG_UPDATE = "sudo apt update"
-INSTALL_PKG = "sudo apt install byobu build-essential vim dmg2img tesseract-ocr tesseract-ocr-eng -y"
+INSTALL_PKG = "sudo apt install byobu build-essential vim dmg2img -y"
 ADDGRP = "sudo usermod -aG docker {}"
 ADDGRP = ADDGRP.format(USER)
 
@@ -83,14 +83,15 @@ fslink.vlan_tagging = True
 # Install
 node.addService(rspec.Execute(shell="bash", command=PKG_UPDATE))
 node.addService(rspec.Execute(shell="bash", command=INSTALL_PKG))
-node.addService(rspec.Execute(shell="bash", command=MNT))
-node.addService(rspec.Execute(shell="bash", command=MNT_1))
-node.addService(rspec.Execute(shell="bash", command=MNT_2))
+# node.addService(rspec.Execute(shell="bash", command=MNT))
+# node.addService(rspec.Execute(shell="bash", command=MNT_1))
+# node.addService(rspec.Execute(shell="bash", command=MNT_2))
 node.addService(rspec.Execute(shell="bash", command=CHMOD))
 node.addService(rspec.Execute(shell="bash", command=OQINSTALL))
 node.addService(rspec.Execute(shell="bash", command=UNTAR))
 node.addService(rspec.Execute(shell="bash", command=DOCKERINSTALL))
 node.addService(rspec.Execute(shell="bash", command=ADDGRP))
+node.addService(pg.Execute(shell="sh", command="sh /local/repository/setup-grow-rootfs.sh 0")
 
 portal.context.printRequestRSpec()
 
