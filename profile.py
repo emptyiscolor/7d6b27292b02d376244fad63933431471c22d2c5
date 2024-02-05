@@ -37,13 +37,18 @@ SINEPY = "sudo -u {} nohup python3 /local/repository/sine.py > /dev/null &"
 SINEPY = SINEPY.format(USER)
 ADDGRP = "sudo usermod -aG docker {}"
 ADDGRP = ADDGRP.format(USER)
+CHOWN_DATA = "sudo chown -R {} /mydata"
+CHOWN_DATA = CHOWN_DATA.format(USER)
+MKDIR_DATA = "sudo -u {} mkdir /mydata/data"
+MKDIR_DATA = MKDIR_DATA.format(USER)
+URN2204 = "urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU22-64-STD"
 
 # Node server
 node_server = request.RawPC('server')
-#node_server.hardware_type = 'c6525-25g'
+node_server.hardware_type = 'c6525-25g'
 #node_server.hardware_type = 'd6515'
-node_server.hardware_type = 'sm110p'
-node_server.disk_image = 'urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD'
+# node_server.hardware_type = 'sm110p'
+node_server.disk_image = URN2204
 iface0 = node_server.addInterface('interface-0')
 bs0 = node_server.Blockstore('bs', '/mydata')
 node_server.addService(pg.Execute(shell="bash", command=OQINSTALL))
@@ -52,10 +57,10 @@ node_server.addService(pg.Execute(shell="bash", command=ADDGRP))
 
 # Node client 1
 node_client_1 = request.RawPC('client1')
-#node_client_1.hardware_type = 'c6525-25g'
+node_client_1.hardware_type = 'c6525-25g'
 #node_client_1.hardware_type = 'd6515'
-node_client_1.hardware_type = 'sm110p'
-node_client_1.disk_image = 'urn:publicid:IDN+utah.cloudlab.us+image+emulab-ops//UBUNTU20-64-STD'
+#node_client_1.hardware_type = 'sm110p'
+node_client_1.disk_image = URN2204
 iface1 = node_client_1.addInterface('interface-1')
 bs1 = node_client_1.Blockstore('bs1', '/mydata')
 node_client_1.addService(pg.Execute(shell="bash", command=OQINSTALL))
@@ -66,8 +71,8 @@ node_client_1.addService(pg.Execute(shell="bash", command=ADDGRP))
 node_client_2 = request.RawPC('client2')
 node_client_2.hardware_type = 'c6525-25g'
 #node_client_2.hardware_type = 'd6515'
-node_client_2.hardware_type = 'sm110p'
-node_client_2.disk_image = 'urn:publicid:IDN+utah.cloudlab.us+image+emulab-ops//UBUNTU20-64-STD'
+#node_client_2.hardware_type = 'sm110p'
+node_client_2.disk_image = URN2204
 iface2 = node_client_2.addInterface('interface-2')
 bs2 = node_client_2.Blockstore('bs2', '/mydata')
 node_client_2.addService(pg.Execute(shell="bash", command=OQINSTALL))
