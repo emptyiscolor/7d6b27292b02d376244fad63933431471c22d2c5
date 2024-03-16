@@ -1,4 +1,4 @@
-"""two c6525-25g client nodes and one server running ubuntu 20.04
+"""two c220g5 client nodes and one server running ubuntu 20.04
 
 Instructions:
 su sudo for root access"""
@@ -45,7 +45,7 @@ URN2204 = "urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU22-64-STD"
 
 # Node server
 node_server = request.RawPC('server')
-node_server.hardware_type = 'c6525-25g'
+node_server.hardware_type = 'c220g5'
 #node_server.hardware_type = 'd6515'
 # node_server.hardware_type = 'sm110p'
 node_server.disk_image = URN2204
@@ -57,7 +57,7 @@ node_server.addService(pg.Execute(shell="bash", command=ADDGRP))
 
 # Node client 1
 node_client_1 = request.RawPC('client1')
-node_client_1.hardware_type = 'c6525-25g'
+node_client_1.hardware_type = 'c220g5'
 #node_client_1.hardware_type = 'd6515'
 #node_client_1.hardware_type = 'sm110p'
 node_client_1.disk_image = URN2204
@@ -69,7 +69,7 @@ node_client_1.addService(pg.Execute(shell="bash", command=ADDGRP))
 
 # Node client 2
 node_client_2 = request.RawPC('client2')
-node_client_2.hardware_type = 'c6525-25g'
+node_client_2.hardware_type = 'c220g5'
 #node_client_2.hardware_type = 'd6515'
 #node_client_2.hardware_type = 'sm110p'
 node_client_2.disk_image = URN2204
