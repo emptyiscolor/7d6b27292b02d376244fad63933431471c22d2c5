@@ -93,5 +93,5 @@ node.addService(rspec.Execute(shell="bash", command=DOCKERINSTALL))
 node.addService(rspec.Execute(shell="bash", command=ADDGRP))
 node.addService(rspec.Execute(shell="sh", command="sh /local/repository/setup-grow-rootfs.sh 0")
 
-portal.context.printRequestRSpec()
+pc.context.printRequestRSpec()
 
