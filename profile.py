@@ -61,6 +61,7 @@ request = portal.context.makeRequestRSpec()
 node = request.RawPC("node")
 # node.hardware_type = "m510"
 node.hardware_type = "xl170"
+node.hardware_type = "m400"
 #node.hardware_type = "d430"
 # node.hardware_type = "ibm8335"
 # node.hardware_type = "c240g5"
