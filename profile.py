@@ -39,8 +39,10 @@ ADDGRP = "sudo usermod -aG docker {}"
 ADDGRP = ADDGRP.format(USER)
 CHOWN_DATA = "sudo chown -R {} /mydata"
 CHOWN_DATA = CHOWN_DATA.format(USER)
-MKDIR_DATA = "sudo -u {} mkdir /mydata/data"
-MKDIR_DATA = MKDIR_DATA.format(USER)
+MKDIR_DATA = "sudo mkdir -p /mydata/data"
+CMD_PACKAGE_INSTALL = "sudo apt-get install -y byobu stress-ng software-properties-common vim inxi sysstat"
+CMD_PACKAGE_RUBY = "sudo apt-get install -y ruby-full build-essential zlib1g-dev"
+# MKDIR_DATA = MKDIR_DATA.format(USER)
 URN2204 = "urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU22-64-STD"
 
 # Node server
@@ -54,6 +56,9 @@ bs0 = node_server.Blockstore('bs', '/mydata')
 node_server.addService(pg.Execute(shell="bash", command=OQINSTALL))
 node_server.addService(pg.Execute(shell="bash", command=SINEPY))
 node_server.addService(pg.Execute(shell="bash", command=ADDGRP))
+node_server.addService(pg.Execute(shell="bash", command=MKDIR_DATA))
+node_server.addService(pg.Execute(shell="bash", command=CMD_PACKAGE_INSTALL))
+node_server.addService(pg.Execute(shell="bash", command=CMD_PACKAGE_RUBY))
 
 # Node client 1
 node_client_1 = request.RawPC('client1')
@@ -66,6 +71,8 @@ bs1 = node_client_1.Blockstore('bs1', '/mydata')
 node_client_1.addService(pg.Execute(shell="bash", command=OQINSTALL))
 node_client_1.addService(pg.Execute(shell="bash", command=SINEPY))
 node_client_1.addService(pg.Execute(shell="bash", command=ADDGRP))
+node_client_1.addService(pg.Execute(shell="bash", command=MKDIR_DATA))
+node_client_1.addService(pg.Execute(shell="bash", command=CMD_PACKAGE_INSTALL))
 
 # Node client 2
 node_client_2 = request.RawPC('client2')
@@ -78,6 +85,8 @@ bs2 = node_client_2.Blockstore('bs2', '/mydata')
 node_client_2.addService(pg.Execute(shell="bash", command=OQINSTALL))
 node_client_2.addService(pg.Execute(shell="bash", command=SINEPY))
 node_client_2.addService(pg.Execute(shell="bash", command=ADDGRP))
+node_client_2.addService(pg.Execute(shell="bash", command=MKDIR_DATA))
+node_client_2.addService(pg.Execute(shell="bash", command=CMD_PACKAGE_INSTALL))
 
 # Link link-0
 link_0 = request.Link('link-0')
