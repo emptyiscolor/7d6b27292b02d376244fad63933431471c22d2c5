@@ -17,7 +17,7 @@ pc = portal.Context()
 # URL = "https://gitlab.flux.utah.edu/stoller/dots/-/raw/master/dots.tar.gz"
 
 
-imageList = [('urn:publicid:IDN+emulab.net+image+Super-Fuzzing:vm-with-mac', 'UBUNTU 18.04 with packages'),
+imageList = [('urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU22-64-STD', 'UBUNTU 22.04'),
 #     ('urn:publicid:IDN+clemson.cloudlab.us+image+emulab-ops:UBUNTU20-PPC-OSCP-U', '20.04 PPC'),
     ('urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU18-64-STD', 'UBUNTU 18.04'),
     ('urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU20-64-STD', 'UBUNTU 20.04')]
@@ -49,7 +49,7 @@ DOCKERINSTALL = "sudo bash /local/repository/install-docker.sh"
 UNTAR = "sudo -u {} nohup python3 /local/repository/sine.py > /dev/null &"
 UNTAR = UNTAR.format(USER)
 PKG_UPDATE = "sudo apt update"
-INSTALL_PKG = "sudo apt install byobu build-essential vim dmg2img -y"
+INSTALL_PKG = "sudo apt install byobu build-essential vim stress-ng htop -y"
 ADDGRP = "sudo usermod -aG docker {}"
 ADDGRP = ADDGRP.format(USER)
 
@@ -66,18 +66,18 @@ node.hardware_type = "m400"
 # node.hardware_type = "c240g5"
 iface = node.addInterface()
 node.disk_image = params.osImage
-fsnode = request.RemoteBlockstore("bs", params.MPOINT)
-fsnode.dataset = params.DATASET
-
-# bs0 = node.Blockstore('bs', '/mnt/extra/data')
-
-fslink = request.Link("fslink")
-fslink.addInterface(iface)
-fslink.addInterface(fsnode.interface)
+# fsnode = request.RemoteBlockstore("bs", params.MPOINT)
+# fsnode.dataset = params.DATASET
+# 
+# # bs0 = node.Blockstore('bs', '/mnt/extra/data')
+# 
+# fslink = request.Link("fslink")
+# fslink.addInterface(iface)
+# fslink.addInterface(fsnode.interface)
 
 # Special attributes for this link that we must use.
-fslink.best_effort = True
-fslink.vlan_tagging = True
+# fslink.best_effort = True
+# fslink.vlan_tagging = True
 
 
 # Install
