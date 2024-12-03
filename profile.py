@@ -59,7 +59,7 @@ request = portal.context.makeRequestRSpec()
 
 # Add a raw PC to the request.
 node = request.RawPC("node")
-node.hardware_type = "c6525-100g"
+node.hardware_type = "c6525-25g"
 #node.hardware_type = "d430"
 iface = node.addInterface()
 node.disk_image = params.osImage
