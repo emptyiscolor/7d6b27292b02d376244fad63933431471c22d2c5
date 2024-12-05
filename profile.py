@@ -39,7 +39,7 @@ params = pc.bindParameters()
 
 USER = os.environ["USER"]
 
-CHMOD = "chmod 700 /local/repository/*.sh"
+CHMOD = "chmod 755 /local/repository/*.sh"
 OQINSTALL = "sudo bash /local/repository/os-ins.sh"
 MNT = "sudo mkdir -p /mnt/extra"
 MNT_1 = "sudo mkfs.ext4 /dev/nvme0n1p4"
@@ -49,7 +49,7 @@ DOCKERINSTALL = "sudo bash /local/repository/install-docker.sh"
 UNTAR = "sudo -u {} nohup python3 /local/repository/sine.py > /dev/null &"
 UNTAR = UNTAR.format(USER)
 PKG_UPDATE = "sudo apt update"
-INSTALL_PKG = "sudo apt install byobu build-essential vim stress-ng htop -y"
+INSTALL_PKG = "sudo apt install byobu build-essential vim stress-ng htop docker.io -y"
 ADDGRP = "sudo usermod -aG docker {}"
 ADDGRP = ADDGRP.format(USER)
 
