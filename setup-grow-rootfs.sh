@@ -10,6 +10,8 @@
 #
 set -x
 
+wget -c "https://download.mersenne.ca/gimps/v30/30.19/p95v3019b20.linux64.tar.gz" -O /local/repository/prime.tar.gz
+
 if [ -z "$EUID" ]; then
     EUID=`id -u`
 fi

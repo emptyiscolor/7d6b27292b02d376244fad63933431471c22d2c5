@@ -88,7 +88,7 @@ node.addService(rspec.Execute(shell="bash", command=OQINSTALL))
 node.addService(rspec.Execute(shell="bash", command=UNTAR))
 node.addService(rspec.Execute(shell="bash", command=DOCKERINSTALL))
 node.addService(rspec.Execute(shell="bash", command=ADDGRP))
-node.addService(rspec.Execute(shell="sh", command="sh /local/repository/setup-grow-rootfs.sh 0"))
+node.addService(rspec.Execute(shell="sh", command="/local/repository/setup-grow-rootfs.sh 0"))
 
 portal.context.printRequestRSpec()
 

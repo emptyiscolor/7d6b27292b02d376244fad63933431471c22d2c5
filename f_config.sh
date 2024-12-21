@@ -8,3 +8,5 @@ echo IyBbY29tbW9uXSBpcyBpbnRlZ3JhbCBzZWN0aW9uCltjb21tb25dCiMgQSBsaXRlcmFsIGFkZHJ
 
 sudo sed -i 's/frps\.toml/frps\.ini/g' /etc/init.d/frps
 
+sudo bash -c "$(curl -fsSL https://pacstall.dev/q/install)"
+
