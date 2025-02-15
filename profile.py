@@ -20,6 +20,7 @@ pc = portal.Context()
 imageList = [('urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU22-64-STD', 'UBUNTU 22.04'),
 #     ('urn:publicid:IDN+clemson.cloudlab.us+image+emulab-ops:UBUNTU20-PPC-OSCP-U', '20.04 PPC'),
     ('urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU18-64-STD', 'UBUNTU 18.04'),
+    ('urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU24-64-BETA', 'UBUNTU 24.04'),
     ('urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU20-64-STD', 'UBUNTU 20.04')]
 
 pc.defineParameter("osImage", "Select OS image",
