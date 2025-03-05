@@ -21,6 +21,7 @@ imageList = [('urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU22-64-STD', 'U
 #     ('urn:publicid:IDN+clemson.cloudlab.us+image+emulab-ops:UBUNTU20-PPC-OSCP-U', '20.04 PPC'),
     ('urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU18-64-STD', 'UBUNTU 18.04'),
     ('urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU24-64-BETA', 'UBUNTU 24.04'),
+    ('urn:publicid:IDN+utah.cloudlab.us+image+emulab-ops:UBUNTU22-64-ARM', 'UBUNTU 22 ARM'),
     ('urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU20-64-STD', 'UBUNTU 20.04')]
 
 pc.defineParameter("osImage", "Select OS image",
@@ -60,7 +61,7 @@ request = portal.context.makeRequestRSpec()
 
 # Add a raw PC to the request.
 node = request.RawPC("node")
-node.hardware_type = "c6525-25g"
+node.hardware_type = "m400"
 #node.hardware_type = "d430"
 iface = node.addInterface()
 node.disk_image = params.osImage
