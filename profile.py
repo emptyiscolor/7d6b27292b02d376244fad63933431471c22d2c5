@@ -37,6 +37,15 @@ pc.defineParameter("DATASET", "URN of your dataset",
 pc.defineParameter("MPOINT", "Mountpoint for file system",
                    portal.ParameterType.STRING, "/mydata")
 
+# Define hardware type selection parameter
+hardwareList = [('m510', 'M510 (Intel Xeon D-1548)'),
+                ('xl170', 'XL170 (Intel Xeon E5-2640 v4)')]
+
+pc.defineParameter("hardwareType", "Select Hardware Type",
+                   portal.ParameterType.STRING,
+                   hardwareList[0][0], hardwareList,
+                   longDescription="Choose between M510 and XL170 hardware types")
+
 params = pc.bindParameters()
 
 USER = os.environ["USER"]
@@ -61,7 +70,7 @@ request = portal.context.makeRequestRSpec()
 
 # Add a raw PC to the request.
 node = request.RawPC("node")
-node.hardware_type = "m510"
+node.hardware_type = params.hardwareType
 # node.hardware_type = "xl170"
 iface = node.addInterface()
 node.disk_image = params.osImage
