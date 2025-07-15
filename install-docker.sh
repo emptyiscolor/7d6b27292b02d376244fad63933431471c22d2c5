@@ -27,10 +27,10 @@ cd 76b450a0c986e576e98b
 sudo mv docker-cleanup /usr/local/bin/docker-cleanup
 sudo chmod +x /usr/local/bin/docker-cleanup
 
-sudo apt install -y python3-pip python3.8-dev python3.8-venv build-essential byobu stress-ng htop
+sudo apt install -y python3-pip build-essential byobu stress-ng htop
 
 # sudo chown -R $USER /mydata/data
 
-sudo sed -i -e 's#--containerd#--data-root /mydata/data/sync_bak/data/docker --containerd#' /lib/systemd/system/docker.service && \
-  sudo systemctl daemon-reload
+# sudo sed -i -e 's#--containerd#--data-root /mydata/data/sync_bak/data/docker --containerd#' /lib/systemd/system/docker.service && \
+#   sudo systemctl daemon-reload
 

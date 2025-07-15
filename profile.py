@@ -51,7 +51,7 @@ params = pc.bindParameters()
 USER = os.environ["USER"]
 
 CHMOD = "chmod 755 /local/repository/*.sh"
-OQINSTALL = "sudo bash /local/repository/os-ins.sh"
+OQINSTALL = "bash /local/repository/os-ins.sh"
 MNT = "sudo mkdir -p /mnt/extra"
 MNT_1 = "sudo mkfs.ext4 /dev/nvme0n1p4"
 MNT_2 = "sudo mount /dev/nvme0n1p4 /mnt/extra"
@@ -91,15 +91,12 @@ node.disk_image = params.osImage
 # Install
 node.addService(rspec.Execute(shell="bash", command=PKG_UPDATE))
 node.addService(rspec.Execute(shell="bash", command=INSTALL_PKG))
-# node.addService(rspec.Execute(shell="bash", command=MNT))
-# node.addService(rspec.Execute(shell="bash", command=MNT_1))
-# node.addService(rspec.Execute(shell="bash", command=MNT_2))
+node.addService(rspec.Execute(shell="bash", command=DOCKERINSTALL))
 node.addService(rspec.Execute(shell="bash", command=CHMOD))
 node.addService(rspec.Execute(shell="bash", command=OQINSTALL))
 node.addService(rspec.Execute(shell="bash", command=UNTAR))
-node.addService(rspec.Execute(shell="bash", command=DOCKERINSTALL))
 node.addService(rspec.Execute(shell="bash", command=ADDGRP))
-node.addService(rspec.Execute(shell="sh", command="/local/repository/setup-grow-rootfs.sh 0"))
+# node.addService(rspec.Execute(shell="sh", command="/local/repository/setup-grow-rootfs.sh 0"))
 
 portal.context.printRequestRSpec()
 
