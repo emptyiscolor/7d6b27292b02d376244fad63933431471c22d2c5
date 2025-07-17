@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Generated plots and output files
+*.png
+*.jpg
+*.pdf
+plot_output.*
