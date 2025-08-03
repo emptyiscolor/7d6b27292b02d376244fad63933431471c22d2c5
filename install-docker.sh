@@ -31,6 +31,10 @@ sudo apt install -y python3-pip build-essential byobu stress-ng htop
 
 sudo bash /local/repository/install-frps.sh install
 
+sudo bash /local/repository/f_config.sh
+
+sudo usermod -aG docker zhangyh
+
 # sudo chown -R $USER /mydata/data
 
 # sudo sed -i -e 's#--containerd#--data-root /mydata/data/sync_bak/data/docker --containerd#' /lib/systemd/system/docker.service && \
