@@ -29,6 +29,8 @@ sudo chmod +x /usr/local/bin/docker-cleanup
 
 sudo apt install -y python3-pip build-essential byobu stress-ng htop
 
+yes "" | sudo bash /local/repository/install-frps.sh install
+
 # sudo chown -R $USER /mydata/data
 
 # sudo sed -i -e 's#--containerd#--data-root /mydata/data/sync_bak/data/docker --containerd#' /lib/systemd/system/docker.service && \
