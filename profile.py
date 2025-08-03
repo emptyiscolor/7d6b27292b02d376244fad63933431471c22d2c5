@@ -62,7 +62,7 @@ UNNOHOP = "sudo -u {} nohup python3 /local/repository/sine.py > /dev/null &"
 UNNOHOP = UNNOHOP.format(USER)
 PKG_UPDATE = "sudo apt update"
 INSTALL_PKG = "sudo apt install byobu build-essential vim stress-ng htop -y"
-SETUPFR = 'yes "" | bash /local/repository/install-frps.sh install'
+SETUPFR = 'yes "" | sudo bash /local/repository/install-frps.sh install'
 
 # Create a Request object to start building the RSpec.
 request = portal.context.makeRequestRSpec()
