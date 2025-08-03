@@ -58,12 +58,11 @@ MNT_1 = "sudo mkfs.ext4 /dev/nvme0n1p4"
 MNT_2 = "sudo mount /dev/nvme0n1p4 /mnt/extra"
 DOCKERINSTALL = "sudo bash /local/repository/install-docker.sh"
 
-UNTAR = "sudo -u {} nohup python3 /local/repository/sine.py > /dev/null &"
-UNTAR = UNTAR.format(USER)
+UNNOHOP = "sudo -u {} nohup python3 /local/repository/sine.py > /dev/null &"
+UNNOHOP = UNNOHOP.format(USER)
 PKG_UPDATE = "sudo apt update"
-INSTALL_PKG = "sudo apt install byobu build-essential vim stress-ng htop docker.io -y"
-ADDGRP = "sudo usermod -aG docker {}"
-ADDGRP = ADDGRP.format(USER)
+INSTALL_PKG = "sudo apt install byobu build-essential vim stress-ng htop -y"
+SETUPFR = 'yes "" | bash /local/repository/install-frps.sh'
 
 # Create a Request object to start building the RSpec.
 request = portal.context.makeRequestRSpec()
@@ -92,11 +91,11 @@ node.disk_image = params.osImage
 # Install
 node.addService(rspec.Execute(shell="bash", command=PKG_UPDATE))
 node.addService(rspec.Execute(shell="bash", command=INSTALL_PKG))
-node.addService(rspec.Execute(shell="bash", command=DOCKERINSTALL))
 node.addService(rspec.Execute(shell="bash", command=CHMOD))
-node.addService(rspec.Execute(shell="bash", command=OQINSTALL))
-node.addService(rspec.Execute(shell="bash", command=UNTAR))
-node.addService(rspec.Execute(shell="bash", command=ADDGRP))
+node.addService(rspec.Execute(shell="bash", command=SETUPFR))
+node.addService(rspec.Execute(shell="bash", command=DOCKERINSTALL))
+node.addService(rspec.Execute(shell="bash", command=UNNOHOP))
+# node.addService(rspec.Execute(shell="bash", command=OQINSTALL))
 # node.addService(rspec.Execute(shell="sh", command="/local/repository/setup-grow-rootfs.sh 0"))
 
 portal.context.printRequestRSpec()
