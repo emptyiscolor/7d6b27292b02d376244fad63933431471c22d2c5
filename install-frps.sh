@@ -169,7 +169,7 @@ fun_randstr(){
     echo ${strRandomPass}
 }
 fun_getServer(){
-    def_server_url="aliyun"
+    def_server_url="github"
     echo ""
     echo -e "Please select ${program_name} download url:"
     echo -e "[1].aliyun "
@@ -517,9 +517,9 @@ pre_install_clang(){
         echo -e "Log file           : ${COLOR_GREEN}${str_log_file_flag}${COLOR_END}"
         echo "=============================================="
         echo ""
-        echo "Press any key to start...or Press Ctrl+c to cancel"
+        echo "starting... or Press Ctrl+c to cancel"
 
-        char=`get_char`
+        # char=`get_char`
         install_program_server_clang
     fi
 }
