@@ -29,7 +29,7 @@ sudo chmod +x /usr/local/bin/docker-cleanup
 
 sudo apt install -y python3-pip build-essential byobu stress-ng htop
 
-yes "" | sudo bash /local/repository/install-frps.sh install
+sudo bash /local/repository/install-frps.sh install
 
 # sudo chown -R $USER /mydata/data
 
