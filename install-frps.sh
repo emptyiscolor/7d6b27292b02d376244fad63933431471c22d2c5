@@ -165,7 +165,7 @@ fun_randstr(){
     strNum=$1
     [ -z "${strNum}" ] && strNum="16"
     strRandomPass=""
-    strRandomPass=`tr -cd '[:alnum:]' < /dev/urandom | fold -w ${strNum} | head -n1`
+    strRandomPass=`uuidgen | tr -d '-' | head -c ${strNum}`
     echo ${strRandomPass}
 }
 fun_getServer(){
