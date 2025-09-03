@@ -74,7 +74,7 @@ node.hardware_type = params.hardwareType
 # node.hardware_type = "xl170"
 iface = node.addInterface()
 node.disk_image = params.osImage
-bs0 = node.Blockstore('bs', '/mydata')
+bs0 = node.Blockstore('bs', params.MPOINT)
 # fsnode = request.RemoteBlockstore("bs", params.MPOINT)
 # fsnode.dataset = params.DATASET
 # 
