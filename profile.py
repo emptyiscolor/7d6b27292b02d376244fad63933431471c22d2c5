@@ -40,7 +40,9 @@ pc.defineParameter("MPOINT", "Mountpoint for file system",
 # Define hardware type selection parameter
 hardwareList = [('m510', 'M510 (Intel Xeon D-1548)'),
                 ('xl170', 'XL170 (Intel Xeon E5-2640 v4)'),
-                ('c6525-25g', 'C6525-25G (AMD EPYC)')]
+                ('c6525-25g', 'C6525-25G (AMD EPYC)'),
+                ('c6620', 'C6620'),
+                ('c6525-100g', 'C6525-100G (AMD EPYC)')]
 
 pc.defineParameter("hardwareType", "Select Hardware Type",
                    portal.ParameterType.STRING,
