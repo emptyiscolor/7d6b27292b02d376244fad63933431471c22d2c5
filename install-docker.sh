@@ -27,6 +27,14 @@ cd 76b450a0c986e576e98b
 sudo mv docker-cleanup /usr/local/bin/docker-cleanup
 sudo chmod +x /usr/local/bin/docker-cleanup
 
+sudo systemctl stop docker &&\
+    sudo mkdir -p /mydata/docker &&\
+    sudo rm -rf /var/lib/docker &&\
+    sudo ln -s /mydata/docker /var/lib/ &&\
+    sudo systemctl start docker
+
+sudo mkdir -p /mydata/data
+
 sudo apt install -y python3-pip build-essential byobu stress-ng htop
 
 sudo bash /local/repository/install-frps.sh install
