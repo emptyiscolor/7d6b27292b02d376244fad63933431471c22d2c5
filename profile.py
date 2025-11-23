@@ -59,15 +59,15 @@ request = portal.context.makeRequestRSpec()
 
 # Add a raw PC to the request.
 node = request.RawPC("node")
-# node.hardware_type = "xl170"
+node.hardware_type = "xl170"
 # node.hardware_type = "c6620"
-node.hardware_type = "m510"
+# node.hardware_type = "m510"
 iface = node.addInterface()
 node.disk_image = params.osImage
 fsnode = request.RemoteBlockstore("bs", params.MPOINT)
 fsnode.dataset = params.DATASET
 
-# bs0 = node.Blockstore('bs', '/mnt/extra/data')
+bs0 = node.Blockstore('bs', '/mnt/extra')
 
 fslink = request.Link("fslink")
 fslink.addInterface(iface)
