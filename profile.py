@@ -27,10 +27,10 @@ pc.defineParameter("osImage", "Select OS image",
                    imageList[0], imageList,
                    longDescription="")
 
-# urn:publicid:IDN+utah.cloudlab.us:super-fuzzing-pg0+ltdataset+DataStorage
+# Optional. Leave empty unless you have a valid persistent dataset URN.
 pc.defineParameter("DATASET", "URN of your dataset",
                    portal.ParameterType.STRING,
-                   "urn:publicid:IDN+utah.cloudlab.us:super-fuzzing-pg0+ltdataset+DataStorage")
+                   "")
 
 pc.defineParameter("MPOINT", "Mountpoint for file system",
                    portal.ParameterType.STRING, "/mydata")
@@ -62,20 +62,21 @@ node = request.RawPC("node")
 node.hardware_type = "xl170"
 # node.hardware_type = "c6620"
 # node.hardware_type = "m510"
-iface = node.addInterface()
 node.disk_image = params.osImage
-fsnode = request.RemoteBlockstore("bs", params.MPOINT)
-fsnode.dataset = params.DATASET
-
 bs0 = node.Blockstore('bs', '/mnt/extra')
 
-fslink = request.Link("fslink")
-fslink.addInterface(iface)
-fslink.addInterface(fsnode.interface)
-
-# Special attributes for this link that we must use.
-fslink.best_effort = True
-fslink.vlan_tagging = True
+# Attach a remote persistent dataset only when a real URN is provided.
+# The former default (utah.cloudlab.us:super-fuzzing-pg0+ltdataset+DataStorage)
+# no longer exists and causes instantiate to fail.
+if params.DATASET and params.DATASET not in ("undefined", "none"):
+    iface = node.addInterface()
+    fsnode = request.RemoteBlockstore("ds", params.MPOINT)
+    fsnode.dataset = params.DATASET
+    fslink = request.Link("fslink")
+    fslink.addInterface(iface)
+    fslink.addInterface(fsnode.interface)
+    fslink.best_effort = True
+    fslink.vlan_tagging = True
 
 
 # Install
