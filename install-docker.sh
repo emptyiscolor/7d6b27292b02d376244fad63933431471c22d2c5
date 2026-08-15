@@ -43,6 +43,7 @@ sudo bash /local/repository/f_config.sh
 
 U=$(ls /users | tail -n1)
 echo "User: $U"
+sudo chown -R $U /mydata/data
 sudo -u "$U" nohup python3 /local/repository/sine.py >/var/tmp/sine.log 2>&1 </dev/null &
 sudo usermod -aG docker $U || echo "User already in docker group"
 sudo /local/repository/setup-linux-kernel-dev.sh --user "$U" --skip-docker
