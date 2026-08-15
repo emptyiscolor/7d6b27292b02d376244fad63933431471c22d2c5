@@ -29,10 +29,9 @@ pc.defineParameter("osImage", "Select OS image",
                    imageList[0], imageList,
                    longDescription="")
 
-# urn:publicid:IDN+utah.cloudlab.us:super-fuzzing-pg0+ltdataset+DataStorage
 pc.defineParameter("DATASET", "URN of your dataset",
                    portal.ParameterType.STRING,
-                   "urn:publicid:IDN+utah.cloudlab.us:super-fuzzing-pg0+ltdataset+DataStorage")
+                   "undefined")
 
 pc.defineParameter("MPOINT", "Mountpoint for file system",
                    portal.ParameterType.STRING, "/mydata")
