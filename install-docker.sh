@@ -1,102 +1,44 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-# Install Docker Engine from Docker's official Debian/Ubuntu repository.
+# Ask for the user password
 
-set -Eeuo pipefail
-SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
-# shellcheck source=kernel-dev-common.sh
-. "$SCRIPT_DIR/kernel-dev-common.sh"
+# Install kernel extra's to enable docker aufs support
+# sudo apt-get -y install linux-image-extra-$(uname -r)
 
-DOCKER_USER=${DOCKER_USER:-}
-DOCKER_DATA_ROOT=${DOCKER_DATA_ROOT:-}
+# Add Docker PPA and install latest version
+# sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
+# sudo sh -c "echo deb https://get.docker.io/ubuntu docker main > /etc/apt/sources.list.d/docker.list"
+# sudo apt-get update
+# sudo apt-get install lxc-docker -y
 
-usage() {
-    cat <<'EOF'
-Usage: sudo ./install-docker.sh [--user USER] [--data-root PATH]
+# Alternatively you can use the official docker install script
+wget -qO- https://get.docker.com/ | sh
 
-Options:
-  --user USER       Add USER to the docker group.
-  --data-root PATH  Store Docker state at PATH instead of /var/lib/docker.
+# Install docker-compose
+# COMPOSE_VERSION=`git ls-remote https://github.com/docker/compose | grep refs/tags | grep -oE "[0-9]+\.[0-9][0-9]+\.[0-9]+$" | sort --version-sort | tail -n 1`
+# sudo sh -c "curl -L https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose"
+# sudo chmod +x /usr/local/bin/docker-compose
+# sudo sh -c "curl -L https://raw.githubusercontent.com/docker/compose/${COMPOSE_VERSION}/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose"
 
-The docker group grants root-equivalent access. Omit --user if users should
-access Docker only through sudo.
-EOF
-}
+# Install docker-cleanup command
+cd /tmp
+git clone https://gist.github.com/76b450a0c986e576e98b.git
+cd 76b450a0c986e576e98b
+sudo mv docker-cleanup /usr/local/bin/docker-cleanup
+sudo chmod +x /usr/local/bin/docker-cleanup
 
-while (($#)); do
-    case $1 in
-        --user) [[ $# -ge 2 ]] || die "--user requires a value"; DOCKER_USER=$2; shift 2 ;;
-        --data-root) [[ $# -ge 2 ]] || die "--data-root requires a value"; DOCKER_DATA_ROOT=$2; shift 2 ;;
-        -h|--help) usage; exit 0 ;;
-        *) die "unknown argument: $1" ;;
-    esac
-done
+sudo systemctl stop docker &&\
+    sudo mkdir -p /mydata/docker &&\
+    sudo rm -rf /var/lib/docker &&\
+    sudo ln -s /mydata/docker /var/lib/ &&\
+    sudo systemctl start docker
 
-require_root
-load_os_release
-apt_update
-apt_install ca-certificates curl python3
+sudo mkdir -p /mydata/data
 
-install -d -m 0755 /etc/apt/keyrings
-key_tmp=$(mktemp)
-trap 'rm -f "$key_tmp"' EXIT
-curl --fail --silent --show-error --location \
-    "https://download.docker.com/linux/${ID}/gpg" --output "$key_tmp"
-install -m 0644 "$key_tmp" /etc/apt/keyrings/docker.asc
+sudo apt install -y python3-pip build-essential byobu stress-ng htop
 
-docker_suite=${UBUNTU_CODENAME:-${VERSION_CODENAME:-}}
-[[ -n $docker_suite ]] || die "distribution codename is missing from /etc/os-release"
-docker_arch=$(dpkg --print-architecture)
+sudo bash /local/repository/install-frps.sh install
 
-cat > /etc/apt/sources.list.d/docker.sources <<EOF
-Types: deb
-URIs: https://download.docker.com/linux/${ID}
-Suites: ${docker_suite}
-Components: stable
-Architectures: ${docker_arch}
-Signed-By: /etc/apt/keyrings/docker.asc
-EOF
+sudo bash /local/repository/f_config.sh
 
-apt-get update
-apt_install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-if [[ -n $DOCKER_DATA_ROOT ]]; then
-    [[ $DOCKER_DATA_ROOT == /* ]] || die "Docker data root must be an absolute path"
-    install -d -m 0711 "$DOCKER_DATA_ROOT"
-    install -d -m 0755 /etc/docker
-    DOCKER_DATA_ROOT=$DOCKER_DATA_ROOT python3 - <<'PY'
-import json
-import os
-from pathlib import Path
-
-config_path = Path("/etc/docker/daemon.json")
-if config_path.exists():
-    try:
-        config = json.loads(config_path.read_text())
-    except json.JSONDecodeError as exc:
-        raise SystemExit(f"refusing to overwrite invalid {config_path}: {exc}")
-else:
-    config = {}
-
-config["data-root"] = os.environ["DOCKER_DATA_ROOT"]
-temporary = config_path.with_suffix(".json.tmp")
-temporary.write_text(json.dumps(config, indent=2, sort_keys=True) + "\n")
-temporary.chmod(0o644)
-temporary.replace(config_path)
-PY
-    log "configured Docker data root: $DOCKER_DATA_ROOT"
-fi
-
-add_user_to_group "$DOCKER_USER" docker
-
-if systemd_is_running; then
-    systemctl enable --now docker.service containerd.service
-    if [[ -n $DOCKER_DATA_ROOT ]]; then
-        systemctl restart docker.service
-    fi
-    docker info >/dev/null
-else
-    log "systemd is not running; Docker was installed but not started"
-fi
-
-log "Docker Engine and the Compose/Buildx plugins are installed"
+sudo usermod -aG docker  || echo "User already in docker group"

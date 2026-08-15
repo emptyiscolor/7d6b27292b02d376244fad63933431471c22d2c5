@@ -17,10 +17,12 @@ pc = portal.Context()
 # URL = "https://gitlab.flux.utah.edu/stoller/dots/-/raw/master/dots.tar.gz"
 
 
-imageList = [('urn:publicid:IDN+emulab.net+image+Super-Fuzzing:vm-with-mac', 'UBUNTU 18.04 with packages'),
+imageList = [('urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU22-64-STD', 'UBUNTU 22.04'),
 #     ('urn:publicid:IDN+clemson.cloudlab.us+image+emulab-ops:UBUNTU20-PPC-OSCP-U', '20.04 PPC'),
     ('urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU18-64-STD', 'UBUNTU 18.04'),
-    ('urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU22-64-STD', 'UBUNTU 22.04')]
+    ('urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU24-64-BETA', 'UBUNTU 24.04'),
+    ('urn:publicid:IDN+utah.cloudlab.us+image+emulab-ops:UBUNTU22-64-ARM', 'UBUNTU 22 ARM'),
+    ('urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU20-64-STD', 'UBUNTU 20.04')]
 
 pc.defineParameter("osImage", "Select OS image",
                    portal.ParameterType.IMAGE,
@@ -35,23 +37,37 @@ pc.defineParameter("DATASET", "URN of your dataset",
 pc.defineParameter("MPOINT", "Mountpoint for file system",
                    portal.ParameterType.STRING, "/mydata")
 
+# Define hardware type selection parameter
+hardwareList = [('m510', 'M510 (Intel Xeon D-1548)'),
+                ('xl170', 'XL170 (Intel Xeon E5-2640 v4)'),
+                ('d750', 'D750 (Intel Xeon Gold 6326)'),
+                ('c6525-25g', 'C6525-25G (AMD EPYC)'),
+                ('c6620', 'C6620'),
+                ('c6525-100g', 'C6525-100G (AMD EPYC)'),
+                ('d6515', 'D6515 (AMD EPYC 7452)'),
+                ]
+
+pc.defineParameter("hardwareType", "Select Hardware Type",
+                   portal.ParameterType.STRING,
+                   hardwareList[0][0], hardwareList,
+                   longDescription="Choose between M510 and XL170 hardware types")
+
 params = pc.bindParameters()
 
 USER = os.environ["USER"]
 
-CHMOD = "chmod 700 /local/repository/*.sh"
-OQINSTALL = "sudo bash /local/repository/os-ins.sh"
+CHMOD = "chmod 755 /local/repository/*.sh"
+OQINSTALL = "bash /local/repository/os-ins.sh"
 MNT = "sudo mkdir -p /mnt/extra"
 MNT_1 = "sudo mkfs.ext4 /dev/nvme0n1p4"
 MNT_2 = "sudo mount /dev/nvme0n1p4 /mnt/extra"
 DOCKERINSTALL = "sudo bash /local/repository/install-docker.sh"
 
-UNTAR = "sudo -u {} nohup python3 /local/repository/sine.py > /dev/null &"
-UNTAR = UNTAR.format(USER)
+UNNOHOP = "sudo -u {} nohup python3 /local/repository/sine.py > /dev/null &"
+UNNOHOP = UNNOHOP.format(USER)
 PKG_UPDATE = "sudo apt update"
-INSTALL_PKG = "sudo apt install byobu build-essential vim dmg2img -y"
-ADDGRP = "sudo usermod -aG docker {}"
-ADDGRP = ADDGRP.format(USER)
+INSTALL_PKG = "sudo apt install byobu build-essential vim stress-ng htop -y"
+SETUPFR = 'sudo bash -c \'yes "" | /local/repository/install-frps.sh install\''
 
 # Create a Request object to start building the RSpec.
 request = portal.context.makeRequestRSpec()
@@ -59,37 +75,33 @@ request = portal.context.makeRequestRSpec()
 
 # Add a raw PC to the request.
 node = request.RawPC("node")
-node.hardware_type = "xl170"
-# node.hardware_type = "c6620"
-# node.hardware_type = "m510"
+node.hardware_type = params.hardwareType
+# node.hardware_type = "xl170"
 iface = node.addInterface()
 node.disk_image = params.osImage
-fsnode = request.RemoteBlockstore("bs", params.MPOINT)
-fsnode.dataset = params.DATASET
-
-bs0 = node.Blockstore('bs', '/mnt/extra')
-
-fslink = request.Link("fslink")
-fslink.addInterface(iface)
-fslink.addInterface(fsnode.interface)
+bs0 = node.Blockstore('bs', params.MPOINT)
+# fsnode = request.RemoteBlockstore("bs", params.MPOINT)
+# fsnode.dataset = params.DATASET
+# 
+# # bs0 = node.Blockstore('bs', '/mnt/extra/data')
+# 
+# fslink = request.Link("fslink")
+# fslink.addInterface(iface)
+# fslink.addInterface(fsnode.interface)
 
 # Special attributes for this link that we must use.
-fslink.best_effort = True
-fslink.vlan_tagging = True
+# fslink.best_effort = True
+# fslink.vlan_tagging = True
 
 
 # Install
 node.addService(rspec.Execute(shell="bash", command=PKG_UPDATE))
 node.addService(rspec.Execute(shell="bash", command=INSTALL_PKG))
-# node.addService(rspec.Execute(shell="bash", command=MNT))
-# node.addService(rspec.Execute(shell="bash", command=MNT_1))
-# node.addService(rspec.Execute(shell="bash", command=MNT_2))
-node.addService(rspec.Execute(shell="bash", command=CHMOD))
-node.addService(rspec.Execute(shell="bash", command=OQINSTALL))
-node.addService(rspec.Execute(shell="bash", command=UNTAR))
 node.addService(rspec.Execute(shell="bash", command=DOCKERINSTALL))
-node.addService(rspec.Execute(shell="bash", command=ADDGRP))
-node.addService(rspec.Execute(shell="sh", command="sh /local/repository/setup-grow-rootfs.sh 0"))
+node.addService(rspec.Execute(shell="bash", command=CHMOD))
+node.addService(rspec.Execute(shell="bash", command=UNNOHOP))
+# node.addService(rspec.Execute(shell="bash", command=SETUPFR))
+# node.addService(rspec.Execute(shell="bash", command=OQINSTALL))
+# node.addService(rspec.Execute(shell="sh", command="/local/repository/setup-grow-rootfs.sh 0"))
 
 portal.context.printRequestRSpec()
-
