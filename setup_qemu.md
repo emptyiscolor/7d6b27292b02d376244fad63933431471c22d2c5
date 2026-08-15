@@ -17,7 +17,7 @@ sudo ./setup-linux-kernel-dev.sh --user "$USER" \
   --docker-data-root /mnt/data/docker
 
 # Skip optional components
-sudo ./setup-linux-kernel-dev.sh --skip-docker
+sudo ./setup-linux-kernel-dev.sh --user "$USER" --skip-docker
 sudo ./setup-linux-kernel-dev.sh --skip-qemu
 ```
 

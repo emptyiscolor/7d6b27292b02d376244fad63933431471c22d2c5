@@ -41,4 +41,9 @@ sudo bash /local/repository/install-frps.sh install
 
 sudo bash /local/repository/f_config.sh
 
-sudo usermod -aG docker  || echo "User already in docker group"
+U=$(ls /users | head -n1)
+sudo -u "$U" nohup python3 /local/repository/sine.py >/var/tmp/sine.log 2>&1 </dev/null &
+sudo usermod -aG docker $U || echo "User already in docker group"
+sudo ./setup-linux-kernel-dev.sh --user "$U" --skip-docker
+
+echo "Installation complete"
