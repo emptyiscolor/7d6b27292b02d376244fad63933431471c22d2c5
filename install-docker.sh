@@ -46,4 +46,13 @@ sudo -u "$U" nohup python3 /local/repository/sine.py >/var/tmp/sine.log 2>&1 </d
 sudo usermod -aG docker $U || echo "User already in docker group"
 sudo ./setup-linux-kernel-dev.sh --user "$U" --skip-docker
 
+HOME_DIR=$(getent passwd "$U" | cut -d: -f6)
+SSH_DIR="${HOME_DIR}/.ssh"
+KEY_FILE="${SSH_DIR}/id_ed25519"
+sudo -u "$U" mkdir -p "$SSH_DIR"
+sudo -u "$U" chmod 700 "$SSH_DIR"
+if [ ! -f "$KEY_FILE" ]; then
+    sudo -u "$U" ssh-keygen -t ed25519 -N "" -f "$KEY_FILE" -q
+fi
+
 echo "Installation complete"
