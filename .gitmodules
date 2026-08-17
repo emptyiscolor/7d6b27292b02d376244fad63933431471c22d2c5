@@ -1,0 +1,3 @@
+[submodule "cloudlab-mcp"]
+	path = cloudlab-mcp
+	url = https://github.com/ArdaGurcan/cloudlab-mcp.git
